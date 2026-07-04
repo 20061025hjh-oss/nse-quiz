@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>国家安全教育随机答题系统｜云端实时排行榜</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">National Security Education Quiz</p>
+        <h1>国家安全教育随机答题系统</h1>
+        <p class="subtitle">每次随机抽取 <strong>50</strong> 题，每题 <strong>2</strong> 分，满分 <strong>100</strong> 分。提交后显示正确答案、错题与云端实时排行榜。</p>
+      </div>
+      <div class="hero-card">
+        <span id="bankCount">题库载入中</span>
+        <strong>50题 / 100分</strong>
+        <small id="cloudStatus">云端连接检测中</small>
+      </div>
+    </header>
+
+    <main>
+      <section id="startScreen" class="panel start-panel">
+        <div class="panel-title-row">
+          <div>
+            <h2>开始答题</h2>
+            <p>请输入姓名后开始。排行榜记录每一次提交，不按个人最高分合并。</p>
+          </div>
+          <button class="ghost-btn" id="openBoardBtn">查看排行榜</button>
+        </div>
+        <label class="input-label" for="userName">姓名</label>
+        <input id="userName" class="name-input" maxlength="20" placeholder="请输入答题人姓名" autocomplete="name" />
+        <div class="start-actions">
+          <button class="primary-btn" id="startBtn">开始随机抽题</button>
+          <button class="secondary-btn" id="checkCloudBtn" type="button">重新检测云端</button>
+        </div>
+        <p class="small-note" id="storageNote">排行榜使用 Supabase 云端数据库保存，部署后所有手机访问同一网址即可同步排名。</p>
+      </section>
+
+      <section id="quizScreen" class="hidden">
+        <div class="quiz-toolbar">
+          <div>
+            <h2 id="quizTitle">答题中</h2>
+            <p id="quizMeta"></p>
+          </div>
+          <div class="toolbar-stats">
+            <span id="answeredCount">已答 0/50</span>
+            <span id="timer">00:00</span>
+          </div>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        <form id="quizForm" class="question-list"></form>
+        <div class="submit-bar">
+          <button class="secondary-btn" id="backHomeBtn" type="button">返回首页</button>
+          <button class="primary-btn" id="submitBtn" type="button">提交并查看结果</button>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="hidden">
+        <div class="result-hero">
+          <div>
+            <p class="eyebrow">Quiz Result</p>
+            <h2 id="resultTitle">本次成绩</h2>
+            <p id="resultMeta"></p>
+          </div>
+          <div class="score-badge"><span id="scoreValue">0</span><small>/100</small></div>
+        </div>
+        <div class="result-actions">
+          <button class="primary-btn" id="againBtn">再答一次</button>
+          <button class="secondary-btn" id="showWrongBtn">只看错题</button>
+          <button class="ghost-btn" id="showAllAnswersBtn">查看全部答案</button>
+          <button class="ghost-btn" id="boardFromResultBtn">排行榜</button>
+        </div>
+        <div id="answerReview" class="answer-review"></div>
+      </section>
+
+      <section id="leaderboardScreen" class="hidden">
+        <div class="panel-title-row board-title-row">
+          <div>
+            <p class="eyebrow">Realtime Leaderboard</p>
+            <h2>实时排行榜</h2>
+            <p id="leaderboardHint">每次答题提交都会单独进入排行；同分按提交时间先后排序。</p>
+          </div>
+          <button class="secondary-btn" id="boardBackBtn">返回</button>
+        </div>
+        <div id="podium" class="podium"></div>
+        <div class="table-wrap">
+          <table class="rank-table">
+            <thead><tr><th>排名</th><th>姓名</th><th>得分</th><th>正确数</th><th>提交时间</th></tr></thead>
+            <tbody id="rankRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="emptyBoardTemplate">
+    <div class="empty-board">暂无成绩记录。完成一次答题后会自动生成排行榜。</div>
+  </template>
+
+  <script src="questions.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
